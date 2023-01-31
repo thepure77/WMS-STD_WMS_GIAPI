@@ -1,0 +1,20 @@
+2022-08-30-103610  -- Start 366c9ded-9371-4ded-8f21-d95df0103694
+2022-08-30-103610  -- S.sp_GetCheckAfterTaskWave2 
+2022-08-30-103611  -- E.sp_GetCheckAfterTaskWave2 
+2022-08-30-103611  -- S.sp_CheckB4Task 
+2022-08-30-103611  -- E.sp_CheckB4Task 
+2022-08-30-103611  -- Update TaskGI_status 
+2022-08-30-103611  -- END Update TaskGI_status 
+2022-08-30-103612  -- 1
+2022-08-30-103612  -- 2
+2022-08-30-103612  -- 3
+2022-08-30-103612  -- 4
+2022-08-30-103613  -- 5
+2022-08-30-103614  -- S.CreateTaskByLocation 
+2022-08-30-103819  -- E.CreateTaskByLocation 
+2022-08-30-103839  -- S.updateCheckBOM 
+2022-08-30-103845  -- E.updateCheckBOM 
+2022-08-30-103845  -- S.sp_GetCheckAfterTask 
+2022-08-30-103846  -- E.sp_GetCheckAfterTask 
+2022-08-30-103846  -- Update TaskGI_status 2 
+2022-08-30-103846  -- END Update TaskGI_status 2
