@@ -48,7 +48,27 @@ namespace GIAPI.Controllers
 
 
         #region
-        [HttpPost("maketagOut_no_V2")]
+        //[HttpPost("maketagOut_no_V2")]
+        //public IActionResult maketagOut_no([FromBody]JObject body)
+        //{
+        //    try
+        //    {
+        //        var service = new TagoutService();
+        //        var Models = new findtagViewModelItem();
+        //        Models = JsonConvert.DeserializeObject<findtagViewModelItem>(body.ToString());
+        //        var result = service.maketagOut_V2(Models);
+        //        return Ok(result);
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return this.BadRequest(ex.Message);
+        //    }
+        //}
+        #endregion
+
+        #region
+        [HttpPost("maketagOut_no")]
         public IActionResult maketagOut_no([FromBody]JObject body)
         {
             try
@@ -56,27 +76,7 @@ namespace GIAPI.Controllers
                 var service = new TagoutService();
                 var Models = new findtagViewModelItem();
                 Models = JsonConvert.DeserializeObject<findtagViewModelItem>(body.ToString());
-                var result = service.maketagOut_V2(Models);
-                return Ok(result);
-
-            }
-            catch (Exception ex)
-            {
-                return this.BadRequest(ex.Message);
-            }
-        }
-        #endregion
-
-        #region
-        [HttpPost("maketagOut_no_V3")]
-        public IActionResult maketagOut_no_V3([FromBody]JObject body)
-        {
-            try
-            {
-                var service = new TagoutService();
-                var Models = new findtagViewModelItem();
-                Models = JsonConvert.DeserializeObject<findtagViewModelItem>(body.ToString());
-                var result = service.maketagOut_V3(Models);
+                var result = service.maketagOut(Models);
                 return Ok(result);
 
             }

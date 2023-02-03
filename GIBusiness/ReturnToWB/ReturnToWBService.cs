@@ -306,7 +306,7 @@ namespace GIBusiness.TagOut
                         taskitem.Tag_Index = findBin.tag_Index;
                         taskitem.Tag_No = findBin.tag_No;
 
-                        //var sqlCMD_Bin = "Update WMSDB_AMZ_Binbalance_V3..wm_BinBalance set " +
+                        //var sqlCMD_Bin = "Update WMSDB_Binbalance..wm_BinBalance set " +
                         //   "BinBalance_QtyReserve = " + View_TaskInsertBinCard.picking_Qty + " " +
                         //   "where Binbalance_Index = '" + Bincard + "'";
 

@@ -337,90 +337,69 @@ namespace GIBusiness.TagOut
                 if (tagoutitem.Count > 0)
                 {
                     var tote = new { toteID = model.tagOut_No };
-                    var resultScanPick = utils.SendDataApi<TagOutitemViewModel>(new AppSettingConfig().GetUrl("picking"), tote.sJson());
-                    if (resultScanPick.status == "10")
+
+                    foreach (var item in tagoutitem)
                     {
-                        foreach (var item in tagoutitem)
+                        item.TagOut_Status = 1;
+                        item.Update_By = model.create_By;
+                        item.Update_Date = DateTime.Now;
+
+                        var transaction = db.Database.BeginTransaction();
+                        try
                         {
-                            item.TagOut_Status = 1;
-                            item.Update_By = model.create_By;
-                            item.Update_Date = DateTime.Now;
-
-                            var transaction = db.Database.BeginTransaction();
-                            try
-                            {
-                                db.SaveChanges();
-                                transaction.Commit();
-                                result.resultIsUse = true;
-                                result.resultMsg = item.TagOut_Index.ToString();
-                            }
-
-                            catch (Exception exy)
-                            {
-                                result.resultIsUse = false;
-                                result.resultMsg = "ไม่สามารถบันทึกได้";
-                                transaction.Rollback();
-                                throw exy;
-                            }
-
+                            db.SaveChanges();
+                            transaction.Commit();
+                            result.resultIsUse = true;
+                            result.resultMsg = item.TagOut_Index.ToString();
                         }
 
-                        var get_plan = db.WM_TagOutItem.Where(c => c.TagOutRef_No4 == tagoutitem[0].TagOutRef_No4 && !string.IsNullOrEmpty(c.TagOutRef_No2) && c.TagOut_Status == 0).ToList();
-                        if (get_plan.Count > 0)
+                        catch (Exception exy)
                         {
-                            return result;
-                        }
-                        else
-                        {
-                            List<Guid?> get_cuting = db.WM_TagOutItem.Where(c => c.TagOutRef_No4 == tagoutitem[0].TagOutRef_No4 && !string.IsNullOrEmpty(c.TagOutRef_No2) && c.TagOut_Status == 1)
-                                .GroupBy(c => c.GoodsIssueItemLocation_Index).Select(c => c.Key).ToList();
-
-                            var taskItems = db.IM_TaskItem.Where(c => get_cuting.Contains(c.Ref_DocumentItem_Index)).ToList();
-
-                            foreach (var item in taskItems)
-                            {
-                                item.flag_picktolight = 1;
-                                item.flag_picktolight_by = model.create_By;
-                                item.flag_picktolight_Date = DateTime.Now;
-                            }
-
-                            var transaction = db.Database.BeginTransaction();
-                            try
-                            {
-                                db.SaveChanges();
-                                transaction.Commit();
-                                result.resultIsUse = true;
-                            }
-
-                            catch (Exception exy)
-                            {
-                                result.resultIsUse = false;
-                                result.resultMsg = "ไม่สามารถบันทึกได้";
-                                transaction.Rollback();
-                                throw exy;
-                            }
-                            
+                            result.resultIsUse = false;
+                            result.resultMsg = "ไม่สามารถบันทึกได้";
+                            transaction.Rollback();
+                            throw exy;
                         }
 
+                    }
+
+                    var get_plan = db.WM_TagOutItem.Where(c => c.TagOutRef_No4 == tagoutitem[0].TagOutRef_No4 && !string.IsNullOrEmpty(c.TagOutRef_No2) && c.TagOut_Status == 0).ToList();
+                    if (get_plan.Count > 0)
+                    {
+                        return result;
                     }
                     else
                     {
-                        result.resultIsUse = false;
-                        result.resultMsg = resultScanPick.message.description;
-                        var list = new List<PTLPickingModel>();
-                        foreach (var item in resultScanPick.message.models)
-                        {
-                            var set_value = new PTLPickingModel();
-                            set_value.product_Id = item.productId;
-                            set_value.product_Name = item.productName;
-                            set_value.qty = item.quantity;
-                            set_value.status = "Wait for pick";
-                            set_value.productConversion_Name = item.productConversionName;
-                            list.Add(set_value);
-                        }
-                        result.models = list;
-                    }
+                        List<Guid?> get_cuting = db.WM_TagOutItem.Where(c => c.TagOutRef_No4 == tagoutitem[0].TagOutRef_No4 && !string.IsNullOrEmpty(c.TagOutRef_No2) && c.TagOut_Status == 1)
+                            .GroupBy(c => c.GoodsIssueItemLocation_Index).Select(c => c.Key).ToList();
 
+                        var taskItems = db.IM_TaskItem.Where(c => get_cuting.Contains(c.Ref_DocumentItem_Index)).ToList();
+
+                        foreach (var item in taskItems)
+                        {
+                            item.flag_picktolight = 1;
+                            item.flag_picktolight_by = model.create_By;
+                            item.flag_picktolight_Date = DateTime.Now;
+                        }
+
+                        var transaction = db.Database.BeginTransaction();
+                        try
+                        {
+                            db.SaveChanges();
+                            transaction.Commit();
+                            result.resultIsUse = true;
+                        }
+
+                        catch (Exception exy)
+                        {
+                            result.resultIsUse = false;
+                            result.resultMsg = "ไม่สามารถบันทึกได้";
+                            transaction.Rollback();
+                            throw exy;
+                        }
+
+                    }
+                    
                 }
 
 
