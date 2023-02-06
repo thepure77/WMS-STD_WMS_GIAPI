@@ -520,3 +520,7 @@ GIAPI/log_insertBinCardReserve/log_2022-08-23.txt
 GIAPI/log_runwave/log_2022-08-23.txt
 GIAPI/log_SaveAutoWaveByRound/log_2022-08-24.txt
 GIAPI/log_updateCheckBOM/log_2022-08-24.txt
+/GIAPI/log_CreateTaskByLocation
+/GIAPI/log_GIStock
+/GIAPI/log_insertBinCardReserve
+/GIAPI/log_runwave
