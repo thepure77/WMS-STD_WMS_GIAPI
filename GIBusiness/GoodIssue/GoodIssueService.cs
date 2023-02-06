@@ -4888,7 +4888,7 @@ namespace GIBusiness.GoodIssue
 
                                             sqlCMD += " " + Environment.NewLine;
 
-                                            sqlCMD += "  UPdate WMSDB_AMZ_Outbound_V3..im_GoodsIssueItemLocation set  ";
+                                            sqlCMD += "  UPdate WMSDB_Outbound..im_GoodsIssueItemLocation set  ";
                                             sqlCMD += "    Qty =  Qty -  (" + RemainBomDiffTotalQty.ToString() + " / Ratio) ";
                                             sqlCMD += "   ,TotalQty =  TotalQty - " + RemainBomDiffTotalQty.ToString();
                                             sqlCMD += "  where GoodsIssueItemLocation_Index = '" + iTask.Ref_DocumentItem_Index + "' ;";
@@ -4896,7 +4896,7 @@ namespace GIBusiness.GoodIssue
                                             sqlCMD += " " + Environment.NewLine;
 
 
-                                            sqlCMD += "  UPdate WMSDB_AMZ_Outbound_V3..im_TaskItem set ";
+                                            sqlCMD += "  UPdate WMSDB_Outbound..im_TaskItem set ";
                                             sqlCMD += "    Qty =   Qty - (" + RemainBomDiffTotalQty.ToString() + " / Ratio) ";
                                             sqlCMD += "    ,TotalQty = TotalQty - " + RemainBomDiffTotalQty.ToString();
                                             sqlCMD += "   where TaskItem_Index = '" + iTask.TaskItem_Index + "' ;";
@@ -4904,13 +4904,13 @@ namespace GIBusiness.GoodIssue
                                             sqlCMD += " " + Environment.NewLine;
 
 
-                                            sqlCMD += "  UPdate  WMSDB_AMZ_Binbalance_V3 ..wm_BinBalance   set ";
+                                            sqlCMD += "  UPdate  WMSDB_Binbalance ..wm_BinBalance   set ";
                                             sqlCMD += "    BinBalance_QtyReserve = BinBalance_QtyReserve - " + RemainBomDiffTotalQty.ToString();
                                             sqlCMD += "   where BinBalance_Index = '" + iTask.BinBalance_Index + "' ;";
 
                                             sqlCMD += " " + Environment.NewLine;
 
-                                            sqlCMD += "    UPdate  WMSDB_AMZ_Binbalance_V3 ..wm_BinCardReserve set ";
+                                            sqlCMD += "    UPdate  WMSDB_Binbalance ..wm_BinCardReserve set ";
                                             sqlCMD += "   BinCardReserve_QtyBal = BinCardReserve_QtyBal - " + RemainBomDiffTotalQty.ToString();
                                             sqlCMD += "   where BinBalance_Index = '" + iTask.BinBalance_Index + "' ";
                                             sqlCMD += "   and Ref_DocumentItem_Index = '" + iTask.Ref_DocumentItem_Index + "' ;";
@@ -5352,7 +5352,7 @@ namespace GIBusiness.GoodIssue
 
 
 
-                                            sqlCMD += "    UPdate WMSDB_AMZ_Outbound_V3..im_GoodsIssueItemLocation set  ";
+                                            sqlCMD += "    UPdate WMSDB_Outbound..im_GoodsIssueItemLocation set  ";
 
                                             sqlCMD += "   Qty =  Qty -   (" + iTask.TotalQty.ToString() + " / Ratio) ";
                                             sqlCMD += "   ,TotalQty =  TotalQty - " + iTask.TotalQty.ToString();
@@ -5361,7 +5361,7 @@ namespace GIBusiness.GoodIssue
 
                                             sqlCMD += " " + Environment.NewLine;
 
-                                            sqlCMD += "    UPdate WMSDB_AMZ_Outbound_V3..im_TaskItem set ";
+                                            sqlCMD += "    UPdate WMSDB_Outbound..im_TaskItem set ";
                                             sqlCMD += "   Qty =   Qty -    (" + iTask.TotalQty.ToString() + " / Ratio) ";
                                             sqlCMD += "   ,TotalQty = TotalQty - " + iTask.TotalQty.ToString();
                                             sqlCMD += "   where TaskItem_Index = '" + iTask.TaskItem_Index + "' ;";
@@ -5369,13 +5369,13 @@ namespace GIBusiness.GoodIssue
                                             sqlCMD += " " + Environment.NewLine;
 
 
-                                            sqlCMD += "    UPdate  WMSDB_AMZ_Binbalance_V3 ..wm_BinBalance   set ";
+                                            sqlCMD += "    UPdate  WMSDB_Binbalance ..wm_BinBalance   set ";
                                             sqlCMD += "   BinBalance_QtyReserve = BinBalance_QtyReserve - " + iTask.TotalQty.ToString();
                                             sqlCMD += "   where BinBalance_Index = '" + iTask.BinBalance_Index + "' ; ";
 
                                             sqlCMD += " " + Environment.NewLine;
 
-                                            sqlCMD += "    UPdate  WMSDB_AMZ_Binbalance_V3 ..wm_BinCardReserve set ";
+                                            sqlCMD += "    UPdate  WMSDB_Binbalance ..wm_BinCardReserve set ";
                                             sqlCMD += "    BinCardReserve_QtyBal = BinCardReserve_QtyBal - " + iTask.TotalQty.ToString();
                                             sqlCMD += "   where BinBalance_Index = '" + iTask.BinBalance_Index + "' ";
                                             sqlCMD += "   and Ref_DocumentItem_Index = '" + iTask.Ref_DocumentItem_Index + "' ;";
@@ -7614,7 +7614,7 @@ namespace GIBusiness.GoodIssue
 
                                             sqlCMD += " " + Environment.NewLine;
 
-                                            sqlCMD += "  UPdate WMSDB_AMZ_Outbound_V3..im_GoodsIssueItemLocation set  ";
+                                            sqlCMD += "  UPdate WMSDB_Outbound..im_GoodsIssueItemLocation set  ";
                                             sqlCMD += "    Qty =  Qty -  (" + RemainBomDiffTotalQty.ToString() + " / Ratio) ";
                                             sqlCMD += "   ,TotalQty =  TotalQty - " + RemainBomDiffTotalQty.ToString();
                                             sqlCMD += "  where GoodsIssueItemLocation_Index = '" + iTask.Ref_DocumentItem_Index + "' ;";
@@ -7622,7 +7622,7 @@ namespace GIBusiness.GoodIssue
                                             sqlCMD += " " + Environment.NewLine;
 
 
-                                            sqlCMD += "  UPdate WMSDB_AMZ_Outbound_V3..im_TaskItem set ";
+                                            sqlCMD += "  UPdate WMSDB_Outbound..im_TaskItem set ";
                                             sqlCMD += "    Qty =   Qty - (" + RemainBomDiffTotalQty.ToString() + " / Ratio) ";
                                             sqlCMD += "    ,TotalQty = TotalQty - " + RemainBomDiffTotalQty.ToString();
                                             sqlCMD += "   where TaskItem_Index = '" + iTask.TaskItem_Index + "' ;";
@@ -7630,13 +7630,13 @@ namespace GIBusiness.GoodIssue
                                             sqlCMD += " " + Environment.NewLine;
 
 
-                                            sqlCMD += "  UPdate  WMSDB_AMZ_Binbalance_V3 ..wm_BinBalance   set ";
+                                            sqlCMD += "  UPdate  WMSDB_Binbalance ..wm_BinBalance   set ";
                                             sqlCMD += "    BinBalance_QtyReserve = BinBalance_QtyReserve - " + RemainBomDiffTotalQty.ToString();
                                             sqlCMD += "   where BinBalance_Index = '" + iTask.BinBalance_Index + "' ;";
 
                                             sqlCMD += " " + Environment.NewLine;
 
-                                            sqlCMD += "    UPdate  WMSDB_AMZ_Binbalance_V3 ..wm_BinCardReserve set ";
+                                            sqlCMD += "    UPdate  WMSDB_Binbalance ..wm_BinCardReserve set ";
                                             sqlCMD += "   BinCardReserve_QtyBal = BinCardReserve_QtyBal - " + RemainBomDiffTotalQty.ToString();
                                             sqlCMD += "   where BinBalance_Index = '" + iTask.BinBalance_Index + "' ";
                                             sqlCMD += "   and Ref_DocumentItem_Index = '" + iTask.Ref_DocumentItem_Index + "' ;";
@@ -8078,7 +8078,7 @@ namespace GIBusiness.GoodIssue
 
 
 
-                                            sqlCMD += "    UPdate WMSDB_AMZ_Outbound_V3..im_GoodsIssueItemLocation set  ";
+                                            sqlCMD += "    UPdate WMSDB_Outbound..im_GoodsIssueItemLocation set  ";
 
                                             sqlCMD += "   Qty =  Qty -   (" + iTask.TotalQty.ToString() + " / Ratio) ";
                                             sqlCMD += "   ,TotalQty =  TotalQty - " + iTask.TotalQty.ToString();
@@ -8087,7 +8087,7 @@ namespace GIBusiness.GoodIssue
 
                                             sqlCMD += " " + Environment.NewLine;
 
-                                            sqlCMD += "    UPdate WMSDB_AMZ_Outbound_V3..im_TaskItem set ";
+                                            sqlCMD += "    UPdate WMSDB_Outbound..im_TaskItem set ";
                                             sqlCMD += "   Qty =   Qty -    (" + iTask.TotalQty.ToString() + " / Ratio) ";
                                             sqlCMD += "   ,TotalQty = TotalQty - " + iTask.TotalQty.ToString();
                                             sqlCMD += "   where TaskItem_Index = '" + iTask.TaskItem_Index + "' ;";
@@ -8095,13 +8095,13 @@ namespace GIBusiness.GoodIssue
                                             sqlCMD += " " + Environment.NewLine;
 
 
-                                            sqlCMD += "    UPdate  WMSDB_AMZ_Binbalance_V3 ..wm_BinBalance   set ";
+                                            sqlCMD += "    UPdate  WMSDB_Binbalance ..wm_BinBalance   set ";
                                             sqlCMD += "   BinBalance_QtyReserve = BinBalance_QtyReserve - " + iTask.TotalQty.ToString();
                                             sqlCMD += "   where BinBalance_Index = '" + iTask.BinBalance_Index + "' ; ";
 
                                             sqlCMD += " " + Environment.NewLine;
 
-                                            sqlCMD += "    UPdate  WMSDB_AMZ_Binbalance_V3 ..wm_BinCardReserve set ";
+                                            sqlCMD += "    UPdate  WMSDB_Binbalance ..wm_BinCardReserve set ";
                                             sqlCMD += "    BinCardReserve_QtyBal = BinCardReserve_QtyBal - " + iTask.TotalQty.ToString();
                                             sqlCMD += "   where BinBalance_Index = '" + iTask.BinBalance_Index + "' ";
                                             sqlCMD += "   and Ref_DocumentItem_Index = '" + iTask.Ref_DocumentItem_Index + "' ;";
@@ -25339,7 +25339,7 @@ namespace GIBusiness.GoodIssue
 
                 olog.logging("AutoWaveByRound", "CheckGI");
                 //2. Create Task
-                var CheckGI = db.IM_GoodsIssue.Where(c => c.GoodsIssue_Index == new Guid(GI_Index) && c.GI_status == 1 && c.TaskGI_status == 0 && c.TagOut_status == 0 && c.WCS_status == 0).ToList();
+                var CheckGI = db.IM_GoodsIssue.Where(c => c.GoodsIssue_Index == new Guid(GI_Index) && c.Document_Status == -2 && c.GI_status == 2 && c.TaskGI_status == 0 && c.TagOut_status == 0 && c.WCS_status == 0).ToList();
                 if (CheckGI.Count > 0)
                 {
 
@@ -25347,7 +25347,7 @@ namespace GIBusiness.GoodIssue
                     olog.logging("AutoWaveByRound", "Create Task");
                     try
                     {
-                        // var CreateTask = SaveAutoWaveByRound(GI_Index, "");
+                        var CreateTask = SaveAutoWaveByRound(GI_Index, "");
 
                     }
                     catch (Exception exTask)
@@ -25357,11 +25357,13 @@ namespace GIBusiness.GoodIssue
                     }
 
                 }
+                
+                GIDbContext dbTest = new GIDbContext();
 
                 // 3.Create Tagout
                 olog.logging("AutoWaveByRound", "CheckTaskGI");
-                var CheckTaskGI = db.IM_GoodsIssue.Where(c => c.GoodsIssue_Index == new Guid(GI_Index) && c.GI_status == 1 && c.TaskGI_status == 1 && c.TagOut_status == 0 && c.WCS_status == 0).ToList();
-                if (CheckTaskGI.Count > 0)
+                CheckGI = dbTest.IM_GoodsIssue.Where(c => c.GoodsIssue_Index == new Guid(GI_Index) && c.Document_Status == 0 && c.GI_status == 2 && c.TaskGI_status == 2 && c.TagOut_status == 0 && c.WCS_status == 0).ToList();
+                if (CheckGI.Count > 0)
                 {
                     olog.logging("AutoWaveByRound", "Create Tagout");
                     try
@@ -25369,7 +25371,7 @@ namespace GIBusiness.GoodIssue
                         var service = new TagoutService();
                         var Models = new findtagViewModelItem();
                         Models.GoodsIssue_No = GI_No;
-                        // var CreateTagout = service.maketagOut_V3(Models);
+                        var CreateTagout = service.maketagOut(Models);
 
                     }
                     catch (Exception exTagout)
@@ -25384,29 +25386,57 @@ namespace GIBusiness.GoodIssue
 
                 }
 
-                // 4. Create WCS
-                olog.logging("AutoWaveByRound", "CheckTagout");
-                var CheckTagout = db.IM_GoodsIssue.Where(c => c.GoodsIssue_Index == new Guid(GI_Index) && c.GI_status == 1 && c.TaskGI_status == 1 && c.TagOut_status == 1 && c.WCS_status == 0).ToList();
-                if (CheckTagout.Count > 0)
-                {
-                    // Send API  WCS
+                GIDbContext dbTest1 = new GIDbContext();
 
-                    olog.logging("AutoWaveByRound", "Create WCS");
+                // 3.Create Tagout
+                olog.logging("AutoWaveByRound", "CheckTaskGI");
+                CheckGI = dbTest1.IM_GoodsIssue.Where(c => c.GoodsIssue_Index == new Guid(GI_Index) && c.Document_Status == 0 && c.GI_status == 2 && c.TaskGI_status == 2 && c.TagOut_status == 1 && c.WCS_status == 0).ToList();
+                if (CheckGI.Count > 0)
+                {
+                    olog.logging("AutoWaveByRound", "Create Tagout");
                     try
                     {
-
-
-
+                        var Models = new WaveByRoundViewModel();
+                        Models.goodsIssue_No = GI_No;
+                        Models.goodsIssue_Index = GI_Index;
+                        var CreateTagout = Update_pickingplan(Models);
+                         
                     }
-                    catch (Exception exWCS)
+                    catch (Exception exTagout)
                     {
-                        olog.logging("AutoWaveByRound", " Err Create WCS : " + exWCS.Message);
-                        throw exWCS;
+                        olog.logging("AutoWaveByRound", " Err Create Pickingplan : " + exTagout.Message);
+                        throw exTagout;
                     }
+
+
 
 
 
                 }
+
+                //// 4. Create WCS
+                //olog.logging("AutoWaveByRound", "CheckTagout");
+                //var CheckTagout = db.IM_GoodsIssue.Where(c => c.GoodsIssue_Index == new Guid(GI_Index) && c.GI_status == 1 && c.TaskGI_status == 1 && c.TagOut_status == 1 && c.WCS_status == 0).ToList();
+                //if (CheckTagout.Count > 0)
+                //{
+                //    // Send API  WCS
+
+                //    olog.logging("AutoWaveByRound", "Create WCS");
+                //    try
+                //    {
+
+
+
+                //    }
+                //    catch (Exception exWCS)
+                //    {
+                //        olog.logging("AutoWaveByRound", " Err Create WCS : " + exWCS.Message);
+                //        throw exWCS;
+                //    }
+
+
+
+                //}
 
 
 
