@@ -368,7 +368,8 @@ namespace GIBusiness.TagOut
                         resultItem.ShipTo_Name = item.ShipTo_Name;
                         resultItem.Drop_Seq = item.Drop_Seq;
                         resultItem.Order_seq = item.Order_seq;
-                        
+                        resultItem.barcodeTracking = new NetBarcode.Barcode(item.barcodeTracking, NetBarcode.Type.Code128B).GetBase64Image();
+                        resultItem.barcodeText = item.barcodeTracking;
 
                         if (item.locationtype == "ByPass" || item.locationtype == "Selective")
                         {

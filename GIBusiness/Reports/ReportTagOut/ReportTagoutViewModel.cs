@@ -48,6 +48,9 @@ namespace GIBusiness.Reports
         public string Product_Id { get; set; }
 
         public Guid? Ref_Document_Index { get; set; }
+
+        public string barcodeTracking { get; set; }
+        public string barcodeText { get; set; }
     }
 
 

@@ -47,5 +47,7 @@ namespace GIDataAccess.Models
         public string Loc { get; set; }
 
         public Guid? Ref_Document_Index { get; set; }
+
+        public string barcodeTracking { get; set; }
     }
 }
