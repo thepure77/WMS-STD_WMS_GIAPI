@@ -345,7 +345,7 @@ namespace GIBusiness.TagOut
                 List<View_tagOut> tagOuts = gettag.ToList();
                 foreach (var item in tagOuts.OrderBy(c=> c.Product_Id).ThenBy(c => c.Loc).ThenBy(c=> c.UDF_1))
                 {
-                    var TY = item.locationtype == "CartonFlowRack" ? 2 : 1;
+                    var TY = item.locationtype == "CartonFlowRack" ? 1 : 1;
                     for (int i = 0; i < TY; i++)
                     {
                         var resultItem = new ReportTagoutViewModel();
