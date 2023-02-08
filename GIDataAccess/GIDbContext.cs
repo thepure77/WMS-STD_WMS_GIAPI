@@ -116,6 +116,10 @@ namespace DataAccess
         public DbSet<View_Task_moveSTG> View_Task_moveSTG { get; set; }
         public DbSet<View_TaskInsertBinCard_PickTiLight> View_TaskInsertBinCard_PickTiLight { get; set; }
 
+        public DbSet<log_api_reponse> log_api_reponse { get; set; }
+        public DbSet<log_api_request> log_api_request { get; set; }
+
+
 
 
 
