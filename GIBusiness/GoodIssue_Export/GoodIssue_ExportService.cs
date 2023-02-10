@@ -2027,18 +2027,27 @@ namespace GIBusiness.GoodIssue
                                     var goodsIssueItemLocations = db.IM_GoodsIssueItemLocation.Where(c => c.GoodsIssue_Index == Guid.Parse(model.goodsIssue_Index)).GroupBy(c => c.Ref_Document_No).Select(c => c.Key).ToList();
                                     foreach (var itemList in goodsIssueItemLocations)
                                     {
-                                        var resmodel = new
+                                        var des = "กำลังจัด";
+                                        try
                                         {
-                                            referenceNo = itemList,
-                                            status = 102,
-                                            statusAfter = 103,
-                                            statusBefore = 101,
-                                            statusDesc = "กำลังจัด",
-                                            statusDateTime = DateTime.Now
-                                        };
-                                        SaveLogRequest(itemList, JsonConvert.SerializeObject(resmodel), resmodel.statusDesc, 1, resmodel.statusDesc, Guid.NewGuid());
-                                        var result_api = Utils.SendDataApi<DemoCallbackResponseViewModel>(new AppSettingConfig().GetUrl("TMS_status"), JsonConvert.SerializeObject(resmodel));
-                                        SaveLogResponse(itemList, JsonConvert.SerializeObject(result_api), resmodel.statusDesc, 1, resmodel.statusDesc, Guid.NewGuid());
+
+                                            var resmodel = new
+                                            {
+                                                referenceNo = itemList,
+                                                status = 102,
+                                                statusAfter = 103,
+                                                statusBefore = 101,
+                                                statusDesc = des,
+                                                statusDateTime = DateTime.Now
+                                            };
+                                            SaveLogRequest(itemList, JsonConvert.SerializeObject(resmodel), des, 1, des, Guid.NewGuid());
+                                            var result_api = utils.SendDataApi<DemoCallbackResponseViewModel>(new AppSettingConfig().GetUrl("TMS_status"), JsonConvert.SerializeObject(resmodel));
+                                            SaveLogResponse(itemList, JsonConvert.SerializeObject(result_api), resmodel.statusDesc, 2, resmodel.statusDesc, Guid.NewGuid());
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            SaveLogResponse(itemList, JsonConvert.SerializeObject(ex.Message), des, -1, des, Guid.NewGuid());
+                                        }
                                     }
                                 }
                                 catch (Exception exy)
@@ -2309,8 +2318,8 @@ namespace GIBusiness.GoodIssue
                 l.File_Name = orderno;
                 db.log_api_reponse.Add(l);
 
-                var d = db.log_api_request.Where(c => c.log_id == logindex).FirstOrDefault();
-                d.status = status;
+                //var d = db.log_api_request.Where(c => c.log_id == logindex).FirstOrDefault();
+                //d.status = status;
 
                 db.SaveChanges();
                 return "";
