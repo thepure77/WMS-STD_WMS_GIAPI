@@ -2024,31 +2024,7 @@ namespace GIBusiness.GoodIssue
                                     transaction.Commit();
 
 
-                                    var goodsIssueItemLocations = db.IM_GoodsIssueItemLocation.Where(c => c.GoodsIssue_Index == Guid.Parse(model.goodsIssue_Index)).GroupBy(c => c.Ref_Document_No).Select(c => c.Key).ToList();
-                                    foreach (var itemList in goodsIssueItemLocations)
-                                    {
-                                        var des = "กำลังจัด";
-                                        try
-                                        {
-
-                                            var resmodel = new
-                                            {
-                                                referenceNo = itemList,
-                                                status = 102,
-                                                statusAfter = 103,
-                                                statusBefore = 101,
-                                                statusDesc = des,
-                                                statusDateTime = DateTime.Now
-                                            };
-                                            SaveLogRequest(itemList, JsonConvert.SerializeObject(resmodel), des, 1, des, Guid.NewGuid());
-                                            var result_api = utils.SendDataApi<DemoCallbackResponseViewModel>(new AppSettingConfig().GetUrl("TMS_status"), JsonConvert.SerializeObject(resmodel));
-                                            SaveLogResponse(itemList, JsonConvert.SerializeObject(result_api), resmodel.statusDesc, 2, resmodel.statusDesc, Guid.NewGuid());
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            SaveLogResponse(itemList, JsonConvert.SerializeObject(ex.Message), des, -1, des, Guid.NewGuid());
-                                        }
-                                    }
+                                   
                                 }
                                 catch (Exception exy)
                                 {
@@ -2074,6 +2050,32 @@ namespace GIBusiness.GoodIssue
 
                     #endregion
 
+                }
+
+                List<string> planGI = db.IM_GoodsIssueItemLocation.Where(c => c.GoodsIssue_Index == Guid.Parse(model.goodsIssue_Index) && c.Document_Status == -2).GroupBy(c=>c.Ref_Document_No).Select(c=> c.Key).ToList();
+                foreach (var item in planGI)
+                {
+                    var des = "กำลังจัด";
+                    try
+                    {
+
+                        var resmodel = new
+                        {
+                            referenceNo = item,
+                            status = 102,
+                            statusAfter = 103,
+                            statusBefore = 101,
+                            statusDesc = des,
+                            statusDateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                        };
+                        SaveLogRequest(item, JsonConvert.SerializeObject(resmodel), des, 1, des, Guid.NewGuid());
+                        var result_api = utils.SendDataApi<DemoCallbackResponseViewModel>(new AppSettingConfig().GetUrl("TMS_status"), JsonConvert.SerializeObject(resmodel));
+                        SaveLogResponse(item, JsonConvert.SerializeObject(result_api), resmodel.statusDesc, 2, resmodel.statusDesc, Guid.NewGuid());
+                    }
+                    catch (Exception ex)
+                    {
+                        SaveLogResponse(item, JsonConvert.SerializeObject(ex.Message), des, -1, des, Guid.NewGuid());
+                    }
                 }
 
                 #endregion
@@ -2199,7 +2201,7 @@ namespace GIBusiness.GoodIssue
                 }
                 #endregion
 
-                State = "Check retrun status PGII";
+               State = "Check retrun status PGII";
                 olog.logging("runwave", State);
 
                 #region update PI status 3 and runwave status 60
@@ -2229,7 +2231,31 @@ namespace GIBusiness.GoodIssue
                                 foreach (var p in pgi)
                                 {
                                     p.Document_Status = 3;
+
+                                    var des = "กำลังจัด";
+                                    try
+                                    {
+
+                                        var resmodel = new
+                                        {
+                                            referenceNo = p.PlanGoodsIssue_No,
+                                            status = 102,
+                                            statusAfter = 103,
+                                            statusBefore = 101,
+                                            statusDesc = des,
+                                            statusDateTime = DateTime.Now
+                                        };
+                                        SaveLogRequest(p.PlanGoodsIssue_No, JsonConvert.SerializeObject(resmodel), des, 1, des, Guid.NewGuid());
+                                        var result_api = utils.SendDataApi<DemoCallbackResponseViewModel>(new AppSettingConfig().GetUrl("TMS_status"), JsonConvert.SerializeObject(resmodel));
+                                        SaveLogResponse(p.PlanGoodsIssue_No, JsonConvert.SerializeObject(result_api), resmodel.statusDesc, 2, resmodel.statusDesc, Guid.NewGuid());
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        SaveLogResponse(p.PlanGoodsIssue_No, JsonConvert.SerializeObject(ex.Message), des, -1, des, Guid.NewGuid());
+                                    }
                                 }
+                                
+
                                 db5.SaveChanges();
                                 transaction.Commit();
                             }
@@ -2292,8 +2318,8 @@ namespace GIBusiness.GoodIssue
                 l.Interface_Name = interfacename;
                 l.Status_Text = txt;
                 l.File_Name = orderno;
-                db.log_api_request.Add(l);
-                db.SaveChanges();
+                dblog.log_api_request.Add(l);
+                dblog.SaveChanges();
                 return "";
             }
             catch (Exception e)
@@ -2316,12 +2342,12 @@ namespace GIBusiness.GoodIssue
                 l.Interface_Name = interfacename;
                 l.Status_Text = txt;
                 l.File_Name = orderno;
-                db.log_api_reponse.Add(l);
+                dblog.log_api_reponse.Add(l);
 
                 //var d = db.log_api_request.Where(c => c.log_id == logindex).FirstOrDefault();
                 //d.status = status;
 
-                db.SaveChanges();
+                dblog.SaveChanges();
                 return "";
             }
             catch (Exception e)
