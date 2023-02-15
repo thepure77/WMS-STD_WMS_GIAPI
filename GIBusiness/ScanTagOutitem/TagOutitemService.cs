@@ -40,7 +40,7 @@ namespace GIBusiness.TagOut
             try
             {
                 var result = new Result();
-                wm_TagOutItem query = db.WM_TagOutItem.FirstOrDefault(c => c.TagOut_No == model.tagOut_No && c.TagOut_Status == 0);
+                wm_TagOutItem query = db.WM_TagOutItem.FirstOrDefault(c => c.TagOut_No == model.tagOut_No && c.TagOut_Status != -1);
                 if (query == null)
                 {
                     result.resultIsUse = false;
@@ -63,11 +63,11 @@ namespace GIBusiness.TagOut
         #endregion
 
         #region scanBarcode_no
-        public Result scanBarcode_no(TagOutitemViewModel model)
+        public TagOutitemViewModel scanBarcode_no(TagOutitemViewModel model)
         {
             try
             {
-                var result = new Result();
+                TagOutitemViewModel result = new TagOutitemViewModel();
                 var resultBarcode = new List<BarcodeViewModel>();
 
                 var filterModel = new { productConversionBarcode = model.product_barcode };
@@ -77,18 +77,78 @@ namespace GIBusiness.TagOut
                 {
                     result.resultIsUse = false;
                     result.resultMsg = "MSG_Alert_Barcode_Not_Found";
+                    return result;
                 }
                 else {
-                    wm_TagOutItem query = db.WM_TagOutItem.FirstOrDefault(c => c.TagOut_No == model.tagOut_No && c.TagOut_Status == 0 && c.Product_Index == resultBarcode[0].product_Index);
-                    if (query == null)
+                    List<wm_TagOutItem> tagOutItems = db.WM_TagOutItem.Where(c => c.TagOut_No == model.tagOut_No && c.TagOut_Status == 0).ToList();
+
+                    if (tagOutItems.Count() > 0)
+                    {
+                        List<im_TaskItem> taskItems = db.IM_TaskItem.Where(c => (c.PickingPickQty_Status == null ? 1 : c.PickingPickQty_Status) == 1 && c.Ref_Document_Index == tagOutItems[0].GoodsIssue_Index ).ToList();
+                        if (taskItems.Count() > 0)
+                        {
+                            result.resultIsUse = false;
+                            result.resultMsg = "Scan pick Qty Unsuccess";
+                            return result;
+                        }
+                    }
+                    
+                    if (tagOutItems.Count() <= 0)
                     {
                         result.resultIsUse = false;
-                        result.resultMsg = "BarCode not match";
+                        result.resultMsg = "Box Already Confirm";
+                        return result;
+                    }
+
+                    tagOutItems = tagOutItems.Where(c => c.Product_Index == resultBarcode[0].product_Index).ToList();
+                    if (tagOutItems.Count() <= 0)
+                    {
+                        result.resultIsUse = false;
+                        result.resultMsg = "Product not match";
+                        return result;
+                    }
+
+                    if (tagOutItems.Count () < model.pickQty)
+                    {
+                        result.resultIsUse = false;
+                        result.resultMsg = "Qty more than pick";
+                        return result;
+                    }
+
+                   
+
+                    tagOutItems = tagOutItems.Where(c => c.ProductConversion_Name == resultBarcode[0].productConversion_Name).ToList();
+                    if (tagOutItems.Count() <= 0)
+                    {
+                        result.resultIsUse = false;
+                        result.resultMsg = "ConversionBarcode not match";
+                        return result;
                     }
                     else {
-                        result.resultMsg = query.TagOutItem_Index.ToString();
-                        result.resultIsUse = true;
+                        foreach (var item in tagOutItems.Take(model.pickQty.GetValueOrDefault()))
+                        {
+                            item.TagOut_Status = 1;
+                            item.Update_By = model.update_By;
+                            item.Update_Date = DateTime.Now;
+                        }
+
+                        var transaction = db.Database.BeginTransaction();
+                        try
+                        {
+                            db.SaveChanges();
+                            transaction.Commit();
+                            result.resultIsUse = true;
+                        }
+
+                        catch (Exception exy)
+                        {
+                            result.resultIsUse = false;
+                            result.resultMsg = "ไม่สามารถบันทึกได้";
+                            transaction.Rollback();
+                            throw exy;
+                        }
                     }
+
                 }
                 
                 return result;
@@ -141,7 +201,7 @@ namespace GIBusiness.TagOut
         //                        transaction.Rollback();
         //                        throw exy;
         //                    }
-                            
+
         //                }
 
         //                var get_plan = db.WM_TagOutItem.Where(c => c.TagOutRef_No4 == tagoutitem[0].TagOutRef_No4 && !string.IsNullOrEmpty(c.TagOutRef_No2) && c.TagOut_Status == 0).ToList();
@@ -257,7 +317,7 @@ namespace GIBusiness.TagOut
 
         //                                catch (Exception exy)
         //                                {
-                                          
+
         //                                    transactionXX.Rollback();
         //                                    throw exy;
         //                                }
@@ -308,9 +368,9 @@ namespace GIBusiness.TagOut
         //                }
         //                result.models = list;
         //            }
-                    
+
         //        }
-                
+
 
 
         //        return result;
@@ -326,6 +386,95 @@ namespace GIBusiness.TagOut
         #endregion
 
         #region New
+        //public Result confirmPicktoLight(TagOutitemViewModel model)
+        //{
+        //    try
+        //    {
+        //        db.Database.SetCommandTimeout(360);
+        //        var result = new Result();
+        //        var tagoutitem = db.WM_TagOutItem.Where(c => c.TagOut_Index == model.tagOut_Index && c.TagOut_Status == 0).ToList();
+
+        //        if (tagoutitem.Count > 0)
+        //        {
+        //            var tote = new { toteID = model.tagOut_No };
+
+        //            foreach (var item in tagoutitem)
+        //            {
+        //                item.TagOut_Status = 1;
+        //                item.Update_By = model.create_By;
+        //                item.Update_Date = DateTime.Now;
+
+        //                var transaction = db.Database.BeginTransaction();
+        //                try
+        //                {
+        //                    db.SaveChanges();
+        //                    transaction.Commit();
+        //                    result.resultIsUse = true;
+        //                    result.resultMsg = item.TagOut_Index.ToString();
+        //                }
+
+        //                catch (Exception exy)
+        //                {
+        //                    result.resultIsUse = false;
+        //                    result.resultMsg = "ไม่สามารถบันทึกได้";
+        //                    transaction.Rollback();
+        //                    throw exy;
+        //                }
+
+        //            }
+
+        //            var get_plan = db.WM_TagOutItem.Where(c => c.TagOutRef_No4 == tagoutitem[0].TagOutRef_No4 && !string.IsNullOrEmpty(c.TagOutRef_No2) && c.TagOut_Status == 0).ToList();
+        //            if (get_plan.Count > 0)
+        //            {
+        //                return result;
+        //            }
+        //            else
+        //            {
+        //                List<Guid?> get_cuting = db.WM_TagOutItem.Where(c => c.TagOutRef_No4 == tagoutitem[0].TagOutRef_No4 && !string.IsNullOrEmpty(c.TagOutRef_No2) && c.TagOut_Status == 1)
+        //                    .GroupBy(c => c.GoodsIssueItemLocation_Index).Select(c => c.Key).ToList();
+
+        //                var taskItems = db.IM_TaskItem.Where(c => get_cuting.Contains(c.Ref_DocumentItem_Index)).ToList();
+
+        //                foreach (var item in taskItems)
+        //                {
+        //                    item.flag_picktolight = 1;
+        //                    item.flag_picktolight_by = model.create_By;
+        //                    item.flag_picktolight_Date = DateTime.Now;
+        //                }
+
+        //                var transaction = db.Database.BeginTransaction();
+        //                try
+        //                {
+        //                    db.SaveChanges();
+        //                    transaction.Commit();
+        //                    result.resultIsUse = true;
+        //                }
+
+        //                catch (Exception exy)
+        //                {
+        //                    result.resultIsUse = false;
+        //                    result.resultMsg = "ไม่สามารถบันทึกได้";
+        //                    transaction.Rollback();
+        //                    throw exy;
+        //                }
+
+        //            }
+
+        //        }
+
+
+
+        //        return result;
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //        throw ex;
+        //    }
+        //}
+
+
         public Result confirmPicktoLight(TagOutitemViewModel model)
         {
             try
@@ -333,73 +482,37 @@ namespace GIBusiness.TagOut
                 db.Database.SetCommandTimeout(360);
                 var result = new Result();
                 var tagoutitem = db.WM_TagOutItem.Where(c => c.TagOut_Index == model.tagOut_Index && c.TagOut_Status == 0).ToList();
-
                 if (tagoutitem.Count > 0)
                 {
-                    var tote = new { toteID = model.tagOut_No };
-
-                    foreach (var item in tagoutitem)
+                    result.resultIsUse = false;
+                    result.resultMsg = "กรุณา Comfirm ของให้ครบตามจำนวน pick";
+                }
+                else
+                {
+                    var tagoutlist = db.WM_TagOutItem.Where(c => c.TagOut_Index == model.tagOut_Index && c.TagOut_Status == 1).ToList();
+                    foreach (var item in tagoutlist)
                     {
-                        item.TagOut_Status = 1;
-                        item.Update_By = model.create_By;
+                        item.TagOut_Status = 2;
+                        item.Update_By = model.update_By;
                         item.Update_Date = DateTime.Now;
-
-                        var transaction = db.Database.BeginTransaction();
-                        try
-                        {
-                            db.SaveChanges();
-                            transaction.Commit();
-                            result.resultIsUse = true;
-                            result.resultMsg = item.TagOut_Index.ToString();
-                        }
-
-                        catch (Exception exy)
-                        {
-                            result.resultIsUse = false;
-                            result.resultMsg = "ไม่สามารถบันทึกได้";
-                            transaction.Rollback();
-                            throw exy;
-                        }
-
                     }
 
-                    var get_plan = db.WM_TagOutItem.Where(c => c.TagOutRef_No4 == tagoutitem[0].TagOutRef_No4 && !string.IsNullOrEmpty(c.TagOutRef_No2) && c.TagOut_Status == 0).ToList();
-                    if (get_plan.Count > 0)
+                    var transaction = db.Database.BeginTransaction();
+                    try
                     {
-                        return result;
+                        db.SaveChanges();
+                        transaction.Commit();
+                        result.resultIsUse = true;
                     }
-                    else
+
+                    catch (Exception exy)
                     {
-                        List<Guid?> get_cuting = db.WM_TagOutItem.Where(c => c.TagOutRef_No4 == tagoutitem[0].TagOutRef_No4 && !string.IsNullOrEmpty(c.TagOutRef_No2) && c.TagOut_Status == 1)
-                            .GroupBy(c => c.GoodsIssueItemLocation_Index).Select(c => c.Key).ToList();
-
-                        var taskItems = db.IM_TaskItem.Where(c => get_cuting.Contains(c.Ref_DocumentItem_Index)).ToList();
-
-                        foreach (var item in taskItems)
-                        {
-                            item.flag_picktolight = 1;
-                            item.flag_picktolight_by = model.create_By;
-                            item.flag_picktolight_Date = DateTime.Now;
-                        }
-
-                        var transaction = db.Database.BeginTransaction();
-                        try
-                        {
-                            db.SaveChanges();
-                            transaction.Commit();
-                            result.resultIsUse = true;
-                        }
-
-                        catch (Exception exy)
-                        {
-                            result.resultIsUse = false;
-                            result.resultMsg = "ไม่สามารถบันทึกได้";
-                            transaction.Rollback();
-                            throw exy;
-                        }
-
+                        result.resultIsUse = false;
+                        result.resultMsg = "ไม่สามารถบันทึกได้";
+                        transaction.Rollback();
+                        throw exy;
                     }
-                    
+
                 }
 
 
@@ -603,21 +716,22 @@ namespace GIBusiness.TagOut
         #endregion
 
         #region DetailScanPicktolight
-        public List<TagOutitemViewModel> DetailScanPicktolight(TagOutitemViewModel model)
+        public TagOutitemViewModel DetailScanPicktolight(TagOutitemViewModel model)
         {
+            TagOutitemViewModel result = new TagOutitemViewModel();
             try
             {
-                var checksorter = false;
-                var result = new List<TagOutitemViewModel>();
-                var detail = db.WM_TagOutItem.Where(c => c.TagOut_Index == Guid.Parse(model.resultMsg) && c.TagOut_Status != -1 ).ToList();
-                var get_group = detail.GroupBy(c => new
+                var detail = db.WM_TagOutItem.Where(c => c.TagOut_Index == Guid.Parse(model.resultMsg)).ToList();
+                
+                var get_group_Uncheck = detail.Where(c => c.TagOut_Status == 0).GroupBy(c => new
                 {
                     c.Product_Index,
                     c.Product_Id,
                     c.Product_Name,
                     c.TagOut_Status,
                     c.ProductConversion_Name,
-                    c.TagOutRef_No2
+                    c.TagOutRef_No2,
+                    Total_qty = c.Qty
                 }).Select(c => new
                 {
                     c.Key.Product_Index,
@@ -626,56 +740,79 @@ namespace GIBusiness.TagOut
                     c.Key.TagOut_Status,
                     c.Key.ProductConversion_Name,
                     c.Key.TagOutRef_No2,
+                    c.Key.Total_qty,
+                    Qty = c.Sum(x => x.Qty)
+                }).ToList();
+                
+                var get_group_Check = detail.Where(c=> c.TagOut_Status == 1).GroupBy(c => new
+                {
+                    c.Product_Index,
+                    c.Product_Id,
+                    c.Product_Name,
+                    c.TagOut_Status,
+                    c.ProductConversion_Name,
+                    c.TagOutRef_No2,
+                    Total_qty = c.Qty 
+                }).Select(c => new
+                {
+                    c.Key.Product_Index,
+                    c.Key.Product_Id,
+                    c.Key.Product_Name,
+                    c.Key.TagOut_Status,
+                    c.Key.ProductConversion_Name,
+                    c.Key.TagOutRef_No2,
+                    c.Key.Total_qty,
                     Qty = c.Sum(x => x.Qty)
                 }).ToList();
 
-                List<ProductViewModel> productList = new List<ProductViewModel>();
-                foreach (var item in get_group)
+
+                if (get_group_Check.Count() <= 0 && get_group_Uncheck.Count() <= 0)
                 {
-                    ProductViewModel getproduct = new ProductViewModel();
-                    getproduct.product_Index = item.Product_Index;
-                    productList.Add(getproduct);
+                    result.resultIsUse = false;
+                    result.resultMsg = "Tagout ที่ Scan จบงานแล้ว";
                 }
-
-                var list = new {
-                    listProductViewModel = productList
-                };
-
-                var Product = utils.SendDataApi<List<ProductViewModel>>(new AppSettingConfig().GetUrl("getProductMaster"), list.sJson());
-
-                foreach (var item in Product)
+                else
                 {
-                    if (!checksorter)
+                    im_PlanGoodsIssue planGoodsIssue = db.IM_PlanGoodsIssue.FirstOrDefault(c => c.PlanGoodsIssue_No == detail[0].TagOutRef_No4);
+                    result.resultIsUse = true;
+                    result.soldto = /*planGoodsIssue.SoldTo_Id + "-" + */planGoodsIssue.SoldTo_Name + "-" + planGoodsIssue.SoldTo_Address;
+                    foreach (var item in get_group_Uncheck)
                     {
-                        if (!string.IsNullOrEmpty(item.UDF_2))
-                        {
-                            checksorter = true;
-                        }
+                        var resultitem = new TagOutitemViewModel();
+                        resultitem.product_Id = item.Product_Id;
+                        resultitem.product_Name = item.Product_Name;
+                        resultitem.qty = item.Qty;
+                        resultitem.productConversion_Name = item.ProductConversion_Name;
+                        resultitem.size = item.TagOutRef_No2;
+                        resultitem.total_qty = (detail.Where(c => c.Product_Id == item.Product_Id).Select(c => c.Qty).Sum());
+                        resultitem.remain = (detail.Where(c => c.Product_Id == item.Product_Id && c.TagOut_Status == 0).Select(c => c.Qty).Sum());
+                        resultitem.pack = (detail.Where(c => c.Product_Id == item.Product_Id && c.TagOut_Status == 1).Select(c => c.Qty).Sum());
+                        //resultitem.total_qty = item.Total_qty;
+                        result.listTagOut_UnCheckViewModel.Add(resultitem);
+                    }
+
+                    foreach (var item in get_group_Check)
+                    {
+                        var resultitem = new TagOutitemViewModel();
+                        resultitem.product_Id = item.Product_Id;
+                        resultitem.product_Name = item.Product_Name;
+                        resultitem.qty = item.Qty;
+                        resultitem.productConversion_Name = item.ProductConversion_Name;
+                        resultitem.size = item.TagOutRef_No2;
+                        resultitem.total_qty = get_group_Check.Select(c => c.Qty).Sum();
+                        result.listTagOut_CheckViewModel.Add(resultitem);
                     }
                 }
-                foreach (var item in get_group)
-                {
-                    var resultitem = new TagOutitemViewModel();
-                    if (checksorter)
-                    {
-                        resultitem.resultCheckSorter = true;
-                    }
-                    resultitem.product_Id = item.Product_Id;
-                    resultitem.product_Name = item.Product_Name;
-                    resultitem.status = item.TagOut_Status == 0 ? "Wait for a scan" : "Scaned";
-                    resultitem.qty = item.Qty;
-                    resultitem.productConversion_Name = item.ProductConversion_Name;
-                    resultitem.size = item.TagOutRef_No2;
-                    resultitem.total_qty = get_group.Select(c=> c.Qty).Sum();
-                    result.Add(resultitem);
-                }
+                
 
                 return result;
             }
             catch (Exception ex)
             {
 
-                throw ex;
+                result.resultIsUse = false;
+                result.resultMsg = ex.Message;
+                return result;
             }
         }
         #endregion

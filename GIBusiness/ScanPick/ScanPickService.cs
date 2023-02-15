@@ -2783,6 +2783,8 @@ namespace GIBusiness.GoodIssue
                             taskitem.PickingToStg_Date = DateTime.Now;
                         }
                         taskitem.PickingPickQty_Status = 2;
+                        taskitem.PickingToDock_Status = 2;
+                        taskitem.Document_StatusTracking = 2;
                         taskitem.UDF_5 = model.confirm_location_Name;
                         taskitem.Update_Date = DateTime.Now;
                         taskitem.Update_By = model.userName;
@@ -2820,6 +2822,9 @@ namespace GIBusiness.GoodIssue
 
                     task.DocumentRef_No1 = model.confirm_location_Name;
                     task.Document_StatusPickQty = 2;
+                    task.Document_StatusDocktoStg = 2;
+                    task.Document_StatusTracking = 2;
+                    task.Document_StatusMovetoStgOG = 2;
                     task.Update_Date = DateTime.Now;
                     task.Update_By = model.userName;
                     var transaction = db.Database.BeginTransaction();

@@ -4,11 +4,13 @@ using System.Text;
 
 namespace GIBusiness.TagOut
 {
-    public class TagOutitemViewModel
+    public class TagOutitemViewModel : Result
     {
         public TagOutitemViewModel()
         {
             listTagOutViewModel = new List<listTagOutViewModel>();
+            listTagOut_CheckViewModel = new List<TagOutitemViewModel>();
+            listTagOut_UnCheckViewModel = new List<TagOutitemViewModel>();
 
         }
 
@@ -30,19 +32,27 @@ namespace GIBusiness.TagOut
         public string resultMsg { get; set; }
         public bool resultCheckSorter { get; set; }
 
+        public string update_By { get; set; }
+
 
 
         public string product_Id { get; set; }
         public string product_Name { get; set; }
         public decimal? qty { get; set; }
+        public int? pickQty { get; set; }
         public string status { get; set; }
         public string productConversion_Name { get; set; }
         public string size { get; set; }
+        public string soldto { get; set; }
         public decimal? total_qty { get; set; }
+        public decimal? remain { get; set; }
+        public decimal? pack { get; set; }
 
         public ResponseMessage message { get; set; }
 
         public List<listTagOutViewModel> listTagOutViewModel { get; set; }
+        public List<TagOutitemViewModel> listTagOut_CheckViewModel { get; set; }
+        public List<TagOutitemViewModel> listTagOut_UnCheckViewModel { get; set; }
 
         public class actionResultTask
         {
