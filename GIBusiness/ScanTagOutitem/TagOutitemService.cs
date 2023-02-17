@@ -385,7 +385,7 @@ namespace GIBusiness.TagOut
 
         #endregion
 
-        #region New
+            #region New
         //public Result confirmPicktoLight(TagOutitemViewModel model)
         //{
         //    try
@@ -497,6 +497,13 @@ namespace GIBusiness.TagOut
                         item.Update_Date = DateTime.Now;
                     }
 
+                    var tagout = db.WM_TagOut.Where(c => c.TagOut_Index == model.tagOut_Index && c.TagOut_Status == 0).ToList();
+                    foreach (var item in tagout)
+                    {
+                        item.TagOut_Status = 2;
+                        item.Update_By = model.update_By;
+                        item.Update_Date = DateTime.Now;
+                    }
                     var transaction = db.Database.BeginTransaction();
                     try
                     {
@@ -723,7 +730,7 @@ namespace GIBusiness.TagOut
             {
                 var detail = db.WM_TagOutItem.Where(c => c.TagOut_Index == Guid.Parse(model.resultMsg)).ToList();
                 
-                var get_group_Uncheck = detail.Where(c => c.TagOut_Status == 0).GroupBy(c => new
+                var get_group_Uncheck = detail/*.Where(c => c.TagOut_Status == 0)*/.GroupBy(c => new
                 {
                     c.Product_Index,
                     c.Product_Id,
@@ -775,6 +782,7 @@ namespace GIBusiness.TagOut
                 {
                     im_PlanGoodsIssue planGoodsIssue = db.IM_PlanGoodsIssue.FirstOrDefault(c => c.PlanGoodsIssue_No == detail[0].TagOutRef_No4);
                     result.resultIsUse = true;
+                    result.size = get_group_Uncheck[0].TagOutRef_No2;
                     result.soldto = /*planGoodsIssue.SoldTo_Id + "-" + */planGoodsIssue.SoldTo_Name + "-" + planGoodsIssue.SoldTo_Address;
                     foreach (var item in get_group_Uncheck)
                     {
