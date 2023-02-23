@@ -735,7 +735,7 @@ namespace GIBusiness.TagOut
                     c.Product_Index,
                     c.Product_Id,
                     c.Product_Name,
-                    c.TagOut_Status,
+                    //c.TagOut_Status,
                     c.ProductConversion_Name,
                     c.TagOutRef_No2,
                     Total_qty = c.Qty
@@ -744,7 +744,7 @@ namespace GIBusiness.TagOut
                     c.Key.Product_Index,
                     c.Key.Product_Id,
                     c.Key.Product_Name,
-                    c.Key.TagOut_Status,
+                    //c.Key.TagOut_Status,
                     c.Key.ProductConversion_Name,
                     c.Key.TagOutRef_No2,
                     c.Key.Total_qty,
